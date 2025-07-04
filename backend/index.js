@@ -49,3 +49,9 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
 console.log(`✅ Server attivo sulla porta ${PORT}`);
 });
+
+// dopo gli altri import
+import authRoutes from './routes/authRoutes.js';
+
+// sotto app.use(cors()), ecc.
+app.use('/api/auth', authRoutes);
