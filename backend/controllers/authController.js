@@ -1,4 +1,9 @@
-const register = async (req, res) => {
+import db from '../db.js';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+
+// Registrazione utente
+export const register = async (req, res) => {
 const { email, password } = req.body;
 
 try {
@@ -29,18 +34,19 @@ export const login = async (req, res) => {
 const { email, password } = req.body;
 
 try {
-// Cerca l'utente nel database
 const [user] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
 if (user.length === 0) {
 return res.status(401).json({ message: 'Email o password non validi.' });
 }
-// Verifica la password
+
+pgsql
+Copia
+Modifica
 const valid = await bcrypt.compare(password, user[0].password);
 if (!valid) {
   return res.status(401).json({ message: 'Email o password non validi.' });
 }
 
-// Genera un token
 const token = jwt.sign({ userId: user[0].id }, process.env.JWT_SECRET, {
   expiresIn: '1h',
 });
