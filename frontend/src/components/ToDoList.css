@@ -1,0 +1,74 @@
+/* ToDoList.css */
+
+.todo-container {
+max-width: 500px;
+margin: 5rem auto;
+padding: 2rem;
+text-align: center;
+border: 1px solid #ddd;
+border-radius: 12px;
+background-color: #fefefe;
+box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.todo-title {
+margin-bottom: 1.5rem;
+font-size: 1.8rem;
+color: #333;
+}
+
+.todo-input-group {
+display: flex;
+gap: 1rem;
+margin-bottom: 1.5rem;
+}
+
+.todo-input {
+flex: 1;
+padding: 0.6rem;
+font-size: 1rem;
+border-radius: 8px;
+border: 1px solid #ccc;
+}
+
+.todo-button {
+padding: 0.6rem 1rem;
+font-size: 1rem;
+background-color: #1976d2;
+color: white;
+border: none;
+border-radius: 8px;
+cursor: pointer;
+}
+
+.todo-button:hover {
+background-color: #115293;
+}
+
+.todo-list {
+list-style: none;
+padding: 0;
+}
+
+.todo-item {
+display: flex;
+justify-content: space-between;
+margin-bottom: 0.8rem;
+padding: 0.6rem;
+border-radius: 6px;
+background-color: #ccc;
+color: black;
+}
+
+.todo-delete-btn {
+background-color: #e53935;
+color: white;
+border: none;
+padding: 0.4rem 0.7rem;
+border-radius: 6px;
+cursor: pointer;
+}
+
+.todo-delete-btn:hover {
+background-color: #b71c1c;
+}
