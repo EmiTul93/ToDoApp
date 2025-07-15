@@ -2,56 +2,48 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import db from './db.js';
+import authRoutes from './routes/authRoutes.js';
 
+// Configurazione environment variables
 dotenv.config();
 
 const app = express();
 
+// Middlewares
 app.use(cors());
 app.use(express.json());
 
-// Test route
-app.get('/', (req, res) => {
-res.send('API online ✅');
+// Test di connessione al database
+db.query('SELECT 1', (err) => {
+  if (err) {
+    console.error('❌ Errore nella connessione al database:', err);
+  } else {
+    console.log('✅ Connessione al database MySQL riuscita');
+  }
 });
 
-// Ottieni tutti i task
-app.get('/api/tasks', (req, res) => {
-db.query('SELECT * FROM tasks', (err, results) => {
-if (err) return res.status(500).json({ error: 'Errore nel recupero delle tasks' });
-res.json(results);
-});
+// Middleware per log delle richieste (utile per debug)
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
+  next();
 });
 
-// Aggiungi un nuovo task
-app.post('/api/tasks', (req, res) => {
-const { text } = req.body;
-if (!text) return res.status(400).json({ error: 'Il testo è richiesto' });
-
-db.query('INSERT INTO tasks (text) VALUES (?)', [text], (err, result) => {
-if (err) return res.status(500).json({ error: "Errore durante l'inserimento del task" });
-res.status(201).json({ id: result.insertId, text });
-});
-});
-
-// Elimina un task
-app.delete('/api/tasks/:id', (req, res) => {
-const { id } = req.params;
-
-db.query('DELETE FROM tasks WHERE id = ?', [id], (err) => {
-if (err) return res.status(500).json({ error: "Errore durante l'eliminazione del task" });
-res.json({ message: 'Task eliminato correttamente' });
-});
-});
-
-const PORT = process.env.PORT || 5000;
-
-app.listen(PORT, () => {
-console.log(`✅ Server attivo sulla porta ${PORT}`);
-});
-
-// dopo gli altri import
-import authRoutes from './routes/authRoutes.js';
-
-// sotto app.use(cors()), ecc.
+// Rotte
 app.use('/api/auth', authRoutes);
+
+// Rotta base di test
+app.get('/', (req, res) => {
+  res.send('✅ API online');
+});
+
+// Gestione errori centralizzata
+app.use((err, req, res, next) => {
+  console.error('🔥 Errore:', err.stack);
+  res.status(500).json({ message: 'Errore interno del server' });
+});
+
+// Avvio del server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server attivo sulla porta ${PORT}`);
+});
