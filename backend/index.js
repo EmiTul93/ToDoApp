@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import db from './db.js';
 import authRoutes from './routes/authRoutes.js';
+import todosRoutes from './routes/todosRoutes.js';
 
 // Configurazione environment variables
 dotenv.config();
@@ -30,6 +31,7 @@ app.use((req, res, next) => {
 
 // Rotte
 app.use('/api/auth', authRoutes);
+app.use('/api/todos', todosRoutes)
 
 // Rotta base di test
 app.get('/', (req, res) => {
