@@ -8,7 +8,7 @@ const router = express.Router();
 // 🔐 Rotta protetta: crea una nuova ToDo
 router.post('/', authMiddleware, (req, res) => {
   const { title, description, due_date, priority, status } = req.body;
-  const userId = req.user.id;
+  const userId = req.userId;
 
   const query = `
     INSERT INTO todos (user_id, title, description, due_date, priority, status, created_at)
