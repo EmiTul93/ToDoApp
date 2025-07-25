@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import './AuthForm.css';
 
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [registerEmail, setRegisterEmail] = useState('');
   const [registerPassword, setRegisterPassword] = useState('');
+  const [showRegisterPassword, setShowRegisterPassword] = useState(false);
   const [message, setMessage] = useState('');
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -21,7 +24,7 @@ const AuthForm = () => {
       });
       localStorage.setItem('token', res.data.token);
       setMessage('Login effettuato con successo!');
-      navigate('/home'); // Modificato: usa navigate invece di window.location
+      navigate('/home');
     } catch (err) {
       setMessage(err.response?.data?.message || 'Login fallito.');
     }
@@ -44,7 +47,6 @@ const AuthForm = () => {
   return (
     <div className="auth-container">
       <div className={`auth-box ${isLogin ? 'login-active' : 'register-active'}`}>
-        {/* Pannelli dei form (sempre presenti nel DOM) */}
         <div className="form-panel login-panel">
           <h2>Accedi</h2>
           <form onSubmit={handleLogin}>
@@ -55,13 +57,22 @@ const AuthForm = () => {
               value={loginEmail}
               onChange={(e) => setLoginEmail(e.target.value)}
             />
-            <input
-              type="password"
-              placeholder="Password"
-              required
-              value={loginPassword}
-              onChange={(e) => setLoginPassword(e.target.value)}
-            />
+            <div className="password-container">
+              <input
+                type={showLoginPassword ? 'text' : 'password'}
+                placeholder="Password"
+                required
+                value={loginPassword}
+                onChange={(e) => setLoginPassword(e.target.value)}
+              />
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowLoginPassword(!showLoginPassword)}
+              >
+                {showLoginPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
             <button type="submit">Accedi</button>
           </form>
         </div>
@@ -76,23 +87,31 @@ const AuthForm = () => {
               value={registerEmail}
               onChange={(e) => setRegisterEmail(e.target.value)}
             />
-            <input
-              type="password"
-              placeholder="Password"
-              required
-              value={registerPassword}
-              onChange={(e) => setRegisterPassword(e.target.value)}
-            />
+            <div className="password-container">
+              <input
+                type={showRegisterPassword ? 'text' : 'password'}
+                placeholder="Password"
+                required
+                value={registerPassword}
+                onChange={(e) => setRegisterPassword(e.target.value)}
+              />
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowRegisterPassword(!showRegisterPassword)}
+              >
+                {showRegisterPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
             <button type="submit">Registrati</button>
           </form>
         </div>
 
-        {/* Overlay animato (slide) */}
         <div className="toggle-overlay">
           <div className="toggle-content">
-            <h2>{isLogin ?'Hai già un account?' : 'Nuovo qui?'}</h2>
+            <h2>{isLogin ? 'Hai già un account?' : 'Nuovo qui?'}</h2>
             <button onClick={() => setIsLogin(!isLogin)}>
-              {isLogin ? 'Accedi': 'Registrati'}
+              {isLogin ? 'Registrati' : 'Accedi'}
             </button>
           </div>
         </div>
