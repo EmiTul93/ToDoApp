@@ -23,3 +23,15 @@ width: 100%;
 max-width: 600px;
 padding: 0 1rem;
 }
+
+.logout-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 8px 16px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}

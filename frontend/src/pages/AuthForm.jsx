@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import './AuthForm.css';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import './AuthForm.css';
 
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -9,6 +10,7 @@ const AuthForm = () => {
   const [registerEmail, setRegisterEmail] = useState('');
   const [registerPassword, setRegisterPassword] = useState('');
   const [message, setMessage] = useState('');
+  const navigate = useNavigate(); 
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -19,9 +21,9 @@ const AuthForm = () => {
       });
       localStorage.setItem('token', res.data.token);
       setMessage('Login effettuato con successo!');
-      window.location.href = '/';
+      navigate('/home'); // Modificato: usa navigate invece di window.location
     } catch (err) {
-      setMessage('Login fallito.');
+      setMessage(err.response?.data?.message || 'Login fallito.');
     }
   };
 
@@ -33,9 +35,9 @@ const AuthForm = () => {
         password: registerPassword,
       });
       setMessage('Registrazione completata! Ora puoi accedere.');
-      setIsLogin(true); // Torna automaticamente al login dopo la registrazione
+      setIsLogin(true);
     } catch (err) {
-      setMessage('Registrazione fallita.');
+      setMessage(err.response?.data?.message || 'Registrazione fallita.');
     }
   };
 
