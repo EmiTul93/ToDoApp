@@ -1,15 +1,15 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
-import Login from './pages/Login';
-import Register from './pages/Register';
+import AuthForm from './pages/authForm';
 
 function App() {
 return (
 <Router>
 <Routes>
-<Route path='/' element={<Home />} />
-<Route path='/login' element={<Login />} />
-<Route path='/register' element={<Register />} />
+{/* Mostra AuthForm come prima pagina */}
+<Route path="/" element={<AuthForm />} />
+{/* Home accessibile dopo il login */}
+<Route path="/home" element={<Home />} />
 </Routes>
 </Router>
 );
