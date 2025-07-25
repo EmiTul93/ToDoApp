@@ -40,13 +40,14 @@ setMessage('Registrazione fallita.');
 };
 
 return (
-<div className={`auth-container ${!isLogin ? 'active' : ''}`}>
+<div className="auth-container">
 <div className="auth-box">
 <div className="forms-container">
-{/* Login Form */}
-<div className="form-panel">
-<h2>Accedi</h2>
-<form onSubmit={handleLogin}>
+<div
+  className={`form-panel-login ${isLogin ? 'active' : ''}`}
+>
+  <h2>Accedi</h2>
+  <form onSubmit={handleLogin}>
 <input
 type="email"
 placeholder="Email"
@@ -64,8 +65,9 @@ onChange={(e) => setLoginPassword(e.target.value)}
 <button type="submit">Accedi</button>
 </form>
 </div>
-      {/* Register Form */}
-      <div className="form-panel">
+      <div
+        className={`form-panel-register ${!isLogin ? 'active' : ''}`}
+      >
         <h2>Registrati</h2>
         <form onSubmit={handleRegister}>
           <input
@@ -87,7 +89,6 @@ onChange={(e) => setLoginPassword(e.target.value)}
       </div>
     </div>
 
-    {/* Toggle Panel */}
     <div className="toggle-panel">
       <h2>{isLogin ? 'Nuovo qui?' : 'Hai già un account?'}</h2>
       <button onClick={() => setIsLogin(!isLogin)}>
@@ -96,7 +97,7 @@ onChange={(e) => setLoginPassword(e.target.value)}
     </div>
   </div>
 
-  {message && <p style={{ marginTop: '1rem', color: 'red' }}>{message}</p>}
+  {message && <p className="auth-message">{message}</p>}
 </div>
 );
 };
