@@ -111,7 +111,7 @@ const AuthForm = () => {
           <div className="toggle-content">
             <h2>{isLogin ? 'Hai già un account?' : 'Nuovo qui?'}</h2>
             <button onClick={() => setIsLogin(!isLogin)}>
-              {isLogin ? 'Registrati' : 'Accedi'}
+              {isLogin ? 'Accedi' : 'Registrati'}
             </button>
           </div>
         </div>

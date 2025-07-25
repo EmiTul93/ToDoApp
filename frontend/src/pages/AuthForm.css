@@ -4,7 +4,7 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: #f8fafc;
+  background: #396b9c;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -31,6 +31,7 @@
 .form-panel {
   width: 50%;
   padding: 3rem;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -74,7 +75,7 @@ input {
   width: 100%;
   padding: 1rem;
   margin-bottom: 1.5rem;
-  border: 2px solid #e2e8f0;
+  border: 2px solid #000000;
   border-radius: 8px;
   font-size: 1rem;
   transition: border-color 0.3s;
@@ -150,10 +151,9 @@ button[type='submit']:hover {
 }
 
 .password-container input {
-  width: 100%;
+  width: calc(100% - 0rem); /* Larghezza compensata per l'icona */
   padding: 1rem;
-  padding-right: 3rem; /* Spazio per l'icona */
-  border: 2px solid #e2e8f0;
+  border: 2px solid #000000;
   border-radius: 8px;
   font-size: 1rem;
   transition: border-color 0.3s;
@@ -161,14 +161,14 @@ button[type='submit']:hover {
 
 .password-toggle {
   position: absolute;
-  right: 12px;
+  right: 1rem;
   top: 50%;
   transform: translateY(-50%);
   background: none;
   border: none;
   color: #64748b;
   cursor: pointer;
-  padding: 0.5rem;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
