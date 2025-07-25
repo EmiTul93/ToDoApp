@@ -1,82 +1,102 @@
 import React, { useState } from 'react';
+import './AuthForm.css';
 import axios from 'axios';
-import './AuthForm.css'; // per l'animazione
 
 const AuthForm = () => {
-const [isLogin, setIsLogin] = useState(true); // true = login, false = register
-const [email, setEmail] = useState('');
-const [password, setPassword] = useState('');
-const [confirmPassword, setConfirmPassword] = useState('');
+const [isLogin, setIsLogin] = useState(true);
+const [loginEmail, setLoginEmail] = useState('');
+const [loginPassword, setLoginPassword] = useState('');
+const [registerEmail, setRegisterEmail] = useState('');
+const [registerPassword, setRegisterPassword] = useState('');
 const [message, setMessage] = useState('');
 
-const handleSubmit = async (e) => {
+const handleLogin = async (e) => {
 e.preventDefault();
-if (!isLogin && password !== confirmPassword) {
-  setMessage("Le password non coincidono.");
-  return;
-}
-
 try {
-  const url = isLogin
-    ? 'http://localhost:5000/api/auth/login'
-    : 'http://localhost:5000/api/auth/register';
-
-  const res = await axios.post(url, { email, password });
-
-  if (isLogin) {
-    localStorage.setItem('token', res.data.token);
-    setMessage('Login effettuato con successo!');
-    window.location.href = '/';
-  } else {
-    setMessage('Registrazione completata. Ora puoi accedere.');
-    setIsLogin(true);
-  }
+const res = await axios.post('http://localhost:5000/api/auth/login', {
+email: loginEmail,
+password: loginPassword,
+});
+localStorage.setItem('token', res.data.token);
+setMessage('Login effettuato con successo!');
+window.location.href = '/';
 } catch (err) {
-  console.error(err);
-  setMessage(
-    err?.response?.data?.message || 'Errore durante la richiesta.'
-  );
+setMessage('Login fallito.');
+}
+};
+
+const handleRegister = async (e) => {
+e.preventDefault();
+try {
+await axios.post('http://localhost:5000/api/auth/register', {
+email: registerEmail,
+password: registerPassword,
+});
+setMessage('Registrazione completata! Ora puoi accedere.');
+setIsLogin(true);
+} catch (err) {
+setMessage('Registrazione fallita.');
 }
 };
 
 return (
-<div className="auth-container">
-<div className={`auth-box ${isLogin ? 'login-mode' : 'register-mode'}`}>
-<h2>{isLogin ? 'Login' : 'Registrati'}</h2>
-<form onSubmit={handleSubmit}>
+<div className={`auth-container ${!isLogin ? 'active' : ''}`}>
+<div className="auth-box">
+<div className="forms-container">
+{/* Login Form */}
+<div className="form-panel">
+<h2>Accedi</h2>
+<form onSubmit={handleLogin}>
 <input
 type="email"
 placeholder="Email"
 required
-value={email}
-onChange={(e) => setEmail(e.target.value)}
+value={loginEmail}
+onChange={(e) => setLoginEmail(e.target.value)}
 />
 <input
 type="password"
 placeholder="Password"
 required
-value={password}
-onChange={(e) => setPassword(e.target.value)}
+value={loginPassword}
+onChange={(e) => setLoginPassword(e.target.value)}
 />
-{!isLogin && (
-<input
-type="password"
-placeholder="Conferma Password"
-required
-value={confirmPassword}
-onChange={(e) => setConfirmPassword(e.target.value)}
-/>
-)}
-<button type="submit">{isLogin ? 'Accedi' : 'Registrati'}</button>
+<button type="submit">Accedi</button>
 </form>
-<p className="auth-message">{message}</p>
-<p className="auth-switch">
-{isLogin ? 'Non hai un account?' : 'Hai già un account?'}{' '}
-<button type="button" onClick={() => setIsLogin(!isLogin)}>
-{isLogin ? 'Registrati' : 'Accedi'}
-</button>
-</p>
 </div>
+      {/* Register Form */}
+      <div className="form-panel">
+        <h2>Registrati</h2>
+        <form onSubmit={handleRegister}>
+          <input
+            type="email"
+            placeholder="Email"
+            required
+            value={registerEmail}
+            onChange={(e) => setRegisterEmail(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            required
+            value={registerPassword}
+            onChange={(e) => setRegisterPassword(e.target.value)}
+          />
+          <button type="submit">Registrati</button>
+        </form>
+      </div>
+    </div>
+
+    {/* Toggle Panel */}
+    <div className="toggle-panel">
+      <h2>{isLogin ? 'Nuovo qui?' : 'Hai già un account?'}</h2>
+      <button onClick={() => setIsLogin(!isLogin)}>
+        {isLogin ? 'Registrati' : 'Accedi'}
+      </button>
+    </div>
+  </div>
+
+  {message && <p style={{ marginTop: '1rem', color: 'red' }}>{message}</p>}
 </div>
 );
 };
