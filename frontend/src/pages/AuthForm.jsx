@@ -88,9 +88,9 @@ const AuthForm = () => {
         {/* Overlay animato (slide) */}
         <div className="toggle-overlay">
           <div className="toggle-content">
-            <h2>{isLogin ? 'Nuovo qui?' : 'Hai già un account?'}</h2>
+            <h2>{isLogin ?'Hai già un account?' : 'Nuovo qui?'}</h2>
             <button onClick={() => setIsLogin(!isLogin)}>
-              {isLogin ? 'Registrati' : 'Accedi'}
+              {isLogin ? 'Accedi': 'Registrati'}
             </button>
           </div>
         </div>
