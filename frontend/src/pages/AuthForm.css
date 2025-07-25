@@ -1,109 +1,142 @@
+/* Base Styles */
 .auth-container {
-position: relative;
-width: 100%;
-height: 100vh;
-overflow: hidden;
-background: #f0f2f5;
-display: flex;
-justify-content: center;
-align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #f8fafc;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .auth-box {
-width: 768px;
-height: 480px;
-background: #fff;
-border-radius: 12px;
-box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-display: flex;
-position: relative;
-overflow: hidden;
-transition: all 0.5s ease-in-out;
+  position: relative;
+  width: 900px;
+  height: 550px;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: flex;
 }
 
-.forms-container {
-width: 50%;
-padding: 3rem;
-position: relative;
+/* Form Container - Nuova aggiunta */
+.forms-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
 }
 
-.form-panel-login,
-.form-panel-register {
-display: none;
-flex-direction: column;
+/* Form Panels - Side by Side */
+.form-panel {
+  width: 50%;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.form-panel-login.active,
-.form-panel-register.active {
-display: flex;
+/* Overlay Slider */
+.toggle-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
-.form-panel-login h2,
-.form-panel-register h2 {
-margin-bottom: 1.5rem;
-font-size: 1.8rem;
-color: #333;
+/* Animation States */
+.auth-box.register-active .toggle-overlay {
+  transform: translateX(100%);
 }
 
-form {
-display: flex;
-flex-direction: column;
+/* Form Elements */
+h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #1e293b;
+}
+
+.toggle-content h2 {
+  color: white;
+  font-weight: 600;
 }
 
 input {
-margin-bottom: 1rem;
-padding: 0.8rem;
-font-size: 1rem;
-border-radius: 8px;
-border: 1px solid #ccc;
-background-color: #fafafa;
+  width: 100%;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+input:focus {
+  outline: none;
+  border-color: #6366f1;
 }
 
 button[type='submit'] {
-padding: 0.8rem;
-font-size: 1rem;
-background-color: #1d4ed8;
-color: #fff;
-border: none;
-border-radius: 8px;
-cursor: pointer;
-transition: background-color 0.3s ease;
+  width: 100%;
+  padding: 1rem;
+  background: #6366f1;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
 }
 
 button[type='submit']:hover {
-background-color: #2563eb;
+  background: #4f46e5;
 }
 
-.toggle-panel {
-width: 50%;
-background: linear-gradient(135deg, #3b82f6, #60a5fa);
-border-radius: 0 12px 12px 0;
-color: #fff;
-display: flex;
-justify-content: center;
-align-items: center;
-flex-direction: column;
-padding: 2rem;
+.toggle-overlay button {
+  margin-top: 1.5rem;
+  padding: 0.8rem 2rem;
+  background: white;
+  color: #6366f1;
+  border: none;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.toggle-panel button {
-margin-top: 1rem;
-padding: 0.7rem 1.2rem;
-background: #fff;
-color: #3b82f6;
-border: none;
-border-radius: 6px;
-cursor: pointer;
-font-weight: bold;
-transition: transform 0.3s ease, background 0.3s ease;
+.toggle-overlay button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
-.toggle-panel button:hover {
-background: #f3f4f6;
-}
-
+/* Message */
 .auth-message {
-margin-top: 1rem;
-color: #e11d48;
-font-weight: bold;
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(239, 68, 68, 0.9);
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border-radius: 50px;
+  font-weight: 500;
+  text-align: center;
+  animation: fadeIn 0.5s;
+  z-index: 3;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
