@@ -161,8 +161,8 @@ button[type='submit']:hover {
 
 .password-toggle {
   position: absolute;
-  right: 1rem;
-  top: 50%;
+  right: 0.5rem;
+  top: 35%;
   transform: translateY(-50%);
   background: none;
   border: none;
