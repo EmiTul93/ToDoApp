@@ -460,3 +460,78 @@ button[type='submit']:hover {
     display: none;
   }
 }
+
+/* Aggiungi questi stili al tuo CSS esistente */
+
+/* Stili per errori di validazione */
+.error-message {
+  color: #dc2626;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  display: block;
+  line-height: 1.2;
+}
+
+.password-error {
+  margin-top: 0.5rem;
+  font-size: 0.7rem;
+  line-height: 1.3;
+}
+
+input.error {
+  border-color: #dc2626 !important;
+  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.1);
+}
+
+input.error:focus {
+  border-color: #dc2626 !important;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+/* Stili per stati di loading */
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+button.loading {
+  position: relative;
+}
+
+button.loading::after {
+  content: '';
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 12px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: translateY(-50%) rotate(360deg); }
+}
+
+/* Messaggio di successo */
+.auth-message.success {
+  background: rgba(16, 185, 129, 0.9);
+}
+
+.auth-message.error {
+  background: rgba(239, 68, 68, 0.9);
+}
+
+/* Responsive per messaggi di errore */
+@media (max-width: 576px) {
+  .error-message {
+    font-size: 0.7rem;
+  }
+  
+  .password-error {
+    font-size: 0.65rem;
+  }
+}
