@@ -1,4 +1,7 @@
-/* Base Styles */
+/* ==========================================================================
+   BASE STYLES - Mobile First (Default: < 576px)
+   ========================================================================== */
+
 .auth-container {
   display: flex;
   justify-content: center;
@@ -6,44 +9,47 @@
   min-height: 100vh;
   background: #396b9c;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 1rem;
 }
 
 .auth-box {
   position: relative;
-  width: 900px;
-  height: 550px;
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  min-height: 600px;
   background: #fff;
   border-radius: 20px;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   display: flex;
+  flex-direction: column;
 }
 
-/* Form Container - Nuova aggiunta */
 .forms-wrapper {
   position: relative;
   width: 100%;
   height: 100%;
   display: flex;
+  flex-direction: column;
 }
 
-/* Form Panels - Side by Side */
 .form-panel {
-  width: 50%;
-  padding: 3rem;
+  width: 100%;
+  padding: 2rem 1.5rem;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-/* Overlay Slider */
+/* Overlay - Vertical for mobile */
 .toggle-overlay {
   position: absolute;
   top: 0;
   left: 0;
-  width: 50%;
-  height: 100%;
+  width: 100%;
+  height: 50%;
   background: linear-gradient(135deg, #6366f1, #8b5cf6);
   color: white;
   transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
@@ -54,15 +60,14 @@
   text-align: center;
 }
 
-/* Animation States */
 .auth-box.register-active .toggle-overlay {
-  transform: translateX(100%);
+  transform: translateY(100%);
 }
 
 /* Form Elements */
 h2 {
-  font-size: 2rem;
-  margin-bottom: 2rem;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
   color: #1e293b;
 }
 
@@ -73,12 +78,13 @@ h2 {
 
 input {
   width: 100%;
-  padding: 1rem;
-  margin-bottom: 1.5rem;
+  padding: 0.8rem;
+  margin-bottom: 1rem;
   border: 2px solid #000000;
   border-radius: 8px;
-  font-size: 1rem;
+  font-size: 0.9rem;
   transition: border-color 0.3s;
+  box-sizing: border-box;
 }
 
 input:focus {
@@ -88,12 +94,12 @@ input:focus {
 
 button[type='submit'] {
   width: 100%;
-  padding: 1rem;
+  padding: 0.8rem;
   background: #6366f1;
   color: white;
   border: none;
   border-radius: 8px;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.3s;
@@ -104,8 +110,8 @@ button[type='submit']:hover {
 }
 
 .toggle-overlay button {
-  margin-top: 1.5rem;
-  padding: 0.8rem 2rem;
+  margin-top: 1rem;
+  padding: 0.7rem 1.5rem;
   background: white;
   color: #6366f1;
   border: none;
@@ -114,6 +120,7 @@ button[type='submit']:hover {
   cursor: pointer;
   transition: all 0.3s;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  font-size: 0.9rem;
 }
 
 .toggle-overlay button:hover {
@@ -124,45 +131,48 @@ button[type='submit']:hover {
 /* Message */
 .auth-message {
   position: absolute;
-  bottom: 2rem;
+  bottom: 1rem;
   left: 50%;
   transform: translateX(-50%);
   background: rgba(239, 68, 68, 0.9);
   color: white;
-  padding: 0.8rem 1.5rem;
+  padding: 0.6rem 1.2rem;
   border-radius: 50px;
   font-weight: 500;
   text-align: center;
   animation: fadeIn 0.5s;
   z-index: 3;
+  font-size: 0.8rem;
+  max-width: 90%;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateX(-50%) translateY(20px); }
-  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+  from { 
+    opacity: 0; 
+    transform: translateX(-50%) translateY(20px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateX(-50%) translateY(0); 
+  }
 }
 
-/* password css */
-
+/* Password Container */
 .password-container {
   position: relative;
   width: 100%;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .password-container input {
-  width: calc(100% - 0rem); /* Larghezza compensata per l'icona */
-  padding: 1rem;
-  border: 2px solid #000000;
-  border-radius: 8px;
-  font-size: 1rem;
-  transition: border-color 0.3s;
+  padding-right: 3rem;
+  margin-bottom: 0;
 }
 
 .password-toggle {
   position: absolute;
-  right: 0.5rem;
-  top: 35%;
+  right: 0.75rem;
+  top: 50%;
   transform: translateY(-50%);
   background: none;
   border: none;
@@ -172,6 +182,8 @@ button[type='submit']:hover {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 2rem;
+  height: 2rem;
 }
 
 .password-toggle:hover {
@@ -179,6 +191,272 @@ button[type='submit']:hover {
 }
 
 .password-toggle svg {
-  width: 1.2rem;
-  height: 1.2rem;
+  width: 1rem;
+  height: 1rem;
+}
+
+/* ==========================================================================
+   SMALL DEVICES - Large phones (≥ 576px)
+   ========================================================================== */
+@media (min-width: 576px) {
+  .auth-container {
+    padding: 1.5rem;
+  }
+  
+  .auth-box {
+    max-width: 450px;
+    min-height: 550px;
+  }
+  
+  .form-panel {
+    padding: 2.5rem 2rem;
+  }
+  
+  h2 {
+    font-size: 1.6rem;
+  }
+  
+  input {
+    padding: 0.9rem;
+    font-size: 0.95rem;
+  }
+  
+  button[type='submit'] {
+    padding: 0.9rem;
+    font-size: 0.95rem;
+  }
+  
+  .auth-message {
+    font-size: 0.85rem;
+  }
+}
+
+/* ==========================================================================
+   MEDIUM DEVICES - Tablets (≥ 768px)
+   ========================================================================== */
+@media (min-width: 768px) {
+  .auth-container {
+    align-items: center;
+    padding: 2rem;
+  }
+  
+  .auth-box {
+    width: 700px;
+    max-width: none;
+    height: 500px;
+    min-height: auto;
+    flex-direction: row;
+  }
+  
+  .forms-wrapper {
+    flex-direction: row;
+  }
+  
+  .form-panel {
+    width: 50%;
+    padding: 2.5rem;
+  }
+  
+  /* Overlay - Horizontal for tablets+ */
+  .toggle-overlay {
+    width: 50%;
+    height: 100%;
+  }
+  
+  .auth-box.register-active .toggle-overlay {
+    transform: translateX(100%);
+  }
+  
+  h2 {
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+  }
+  
+  input {
+    padding: 1rem;
+    margin-bottom: 1.2rem;
+    font-size: 1rem;
+  }
+  
+  button[type='submit'] {
+    padding: 1rem;
+    font-size: 1rem;
+  }
+  
+  .toggle-overlay button {
+    margin-top: 1.5rem;
+    padding: 0.8rem 2rem;
+    font-size: 1rem;
+  }
+  
+  .auth-message {
+    bottom: 2rem;
+    padding: 0.8rem 1.5rem;
+    font-size: 0.9rem;
+    max-width: 80%;
+  }
+  
+  .password-container {
+    margin-bottom: 1.2rem;
+  }
+  
+  .password-toggle svg {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+}
+
+/* ==========================================================================
+   LARGE DEVICES - Laptops/Desktops (≥ 992px)
+   ========================================================================== */
+@media (min-width: 992px) {
+  .auth-box {
+    width: 800px;
+    height: 550px;
+  }
+  
+  .form-panel {
+    padding: 3rem;
+  }
+  
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  input {
+    margin-bottom: 1.5rem;
+  }
+  
+  .password-container {
+    margin-bottom: 1.5rem;
+  }
+  
+  .password-toggle svg {
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+}
+
+/* ==========================================================================
+   EXTRA LARGE DEVICES - Large Desktops (≥ 1200px)
+   ========================================================================== */
+@media (min-width: 1200px) {
+  .auth-box {
+    width: 900px;
+    height: 550px;
+  }
+  
+  .form-panel {
+    padding: 3.5rem;
+  }
+  
+  h2 {
+    font-size: 2.1rem;
+  }
+}
+
+/* ==========================================================================
+   ULTRA WIDE SCREENS (≥ 1440px)
+   ========================================================================== */
+@media (min-width: 1440px) {
+  .auth-container {
+    padding: 3rem;
+  }
+  
+  .auth-box {
+    width: 1000px;
+    height: 580px;
+  }
+  
+  h2 {
+    font-size: 2.2rem;
+  }
+}
+
+/* ==========================================================================
+   LANDSCAPE ORIENTATION - Mobile devices in landscape
+   ========================================================================== */
+@media (max-height: 500px) and (orientation: landscape) {
+  .auth-container {
+    align-items: flex-start;
+    padding: 0.5rem;
+  }
+  
+  .auth-box {
+    min-height: 400px;
+    margin: 0.5rem 0;
+  }
+  
+  .form-panel {
+    padding: 1.5rem;
+  }
+  
+  h2 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+  }
+  
+  input {
+    padding: 0.7rem;
+    margin-bottom: 0.8rem;
+  }
+  
+  button[type='submit'] {
+    padding: 0.7rem;
+  }
+  
+  .toggle-overlay button {
+    margin-top: 0.5rem;
+    padding: 0.6rem 1.2rem;
+  }
+}
+
+/* ==========================================================================
+   HIGH DPI DISPLAYS - Retina and similar
+   ========================================================================== */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .auth-box {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+  }
+  
+  input {
+    border-width: 1px;
+  }
+}
+
+/* ==========================================================================
+   ACCESSIBILITY - Reduced motion preference
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .toggle-overlay {
+    transition: none;
+  }
+  
+  .toggle-overlay button {
+    transition: none;
+  }
+  
+  .auth-message {
+    animation: none;
+  }
+}
+
+/* ==========================================================================
+   PRINT STYLES
+   ========================================================================== */
+@media print {
+  .auth-container {
+    background: white;
+    box-shadow: none;
+  }
+  
+  .auth-box {
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+  
+  .toggle-overlay {
+    display: none;
+  }
 }
