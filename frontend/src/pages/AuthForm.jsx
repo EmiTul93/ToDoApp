@@ -1,123 +1,209 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { loginSchema, registerSchema } from '../utils/validationSchemas';
 import axios from 'axios';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import './AuthForm.css';
 
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
-  const [loginEmail, setLoginEmail] = useState('');
-  const [loginPassword, setLoginPassword] = useState('');
   const [showLoginPassword, setShowLoginPassword] = useState(false);
-  const [registerEmail, setRegisterEmail] = useState('');
-  const [registerPassword, setRegisterPassword] = useState('');
   const [showRegisterPassword, setShowRegisterPassword] = useState(false);
   const [message, setMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  // Form per login
+  const {
+    register: registerLogin,
+    handleSubmit: handleSubmitLogin,
+    formState: { errors: loginErrors },
+    reset: resetLogin
+  } = useForm({
+    resolver: yupResolver(loginSchema),
+    mode: 'onBlur'
+  });
+
+  // Form per registrazione
+  const {
+    register: registerRegister,
+    handleSubmit: handleSubmitRegister,
+    formState: { errors: registerErrors },
+    reset: resetRegister
+  } = useForm({
+    resolver: yupResolver(registerSchema),
+    mode: 'onBlur'
+  });
+
+  const handleLogin = async (data) => {
+  setIsLoading(true);
+  setMessage('');
+  
+  try {
+    const res = await axios.post('http://localhost:5000/api/auth/login', data);
+    localStorage.setItem('token', res.data.token);
+    
+    // Redirect immediato senza messaggio
+    window.location.href = '/home';
+    
+  } catch (err) {
+    const errorMessage = err.response?.data?.message || 'Login fallito.';
+    setMessage(errorMessage);
+    setIsLoading(false);
+  }
+};
+
+
+  const handleRegister = async (data) => {
+    setIsLoading(true);
+    setMessage('');
+    
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/login', {
-        email: loginEmail,
-        password: loginPassword,
-      });
-      localStorage.setItem('token', res.data.token);
-      setMessage('Login effettuato con successo!');
-      navigate('/home');
+      await axios.post('http://localhost:5000/api/auth/register', data);
+      setMessage('Registrazione completata! Ora puoi accedere.');
+      resetRegister();
+      
+      // Switch automatico al login dopo registrazione
+      setTimeout(() => {
+        setIsLogin(true);
+        setMessage('');
+      }, 2000);
+      
     } catch (err) {
-      setMessage(err.response?.data?.message || 'Login fallito.');
+      const errorMessage = err.response?.data?.message || 'Registrazione fallita.';
+      setMessage(errorMessage);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    try {
-      await axios.post('http://localhost:5000/api/auth/register', {
-        email: registerEmail,
-        password: registerPassword,
-      });
-      setMessage('Registrazione completata! Ora puoi accedere.');
-      setIsLogin(true);
-    } catch (err) {
-      setMessage(err.response?.data?.message || 'Registrazione fallita.');
-    }
+  const toggleMode = () => {
+    setIsLogin(!isLogin);
+    setMessage('');
+    resetLogin();
+    resetRegister();
   };
 
   return (
     <div className="auth-container">
-      <div className={`auth-box ${isLogin ? 'login-active' : 'register-active'}`}>
-        <div className="form-panel login-panel">
-          <h2>Accedi</h2>
-          <form onSubmit={handleLogin}>
-            <input
-              type="email"
-              placeholder="Email"
-              required
-              value={loginEmail}
-              onChange={(e) => setLoginEmail(e.target.value)}
-            />
-            <div className="password-container">
-              <input
-                type={showLoginPassword ? 'text' : 'password'}
-                placeholder="Password"
-                required
-                value={loginPassword}
-                onChange={(e) => setLoginPassword(e.target.value)}
-              />
-              <button
-                type="button"
-                className="password-toggle"
-                onClick={() => setShowLoginPassword(!showLoginPassword)}
+      <div className={`auth-box ${!isLogin ? 'register-active' : ''}`}>
+        <div className="forms-wrapper">
+          {/* Form di Login */}
+          <div className="form-panel">
+            <h2>Accedi</h2>
+            <form onSubmit={handleSubmitLogin(handleLogin)}>
+              <div>
+                <input
+                  type="email"
+                  placeholder="Email"
+                  {...registerLogin('email')}
+                  className={loginErrors.email ? 'error' : ''}
+                />
+                {loginErrors.email && (
+                  <span className="error-message">{loginErrors.email.message}</span>
+                )}
+              </div>
+
+              <div className="password-container">
+                <input
+                  type={showLoginPassword ? 'text' : 'password'}
+                  placeholder="Password"
+                  {...registerLogin('password')}
+                  className={loginErrors.password ? 'error' : ''}
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowLoginPassword(!showLoginPassword)}
+                >
+                  {showLoginPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
+                {loginErrors.password && (
+                  <span className="error-message">{loginErrors.password.message}</span>
+                )}
+              </div>
+
+              <button 
+                type="submit" 
+                disabled={isLoading}
+                className={isLoading ? 'loading' : ''}
               >
-                {showLoginPassword ? <FaEyeSlash /> : <FaEye />}
+                {isLoading ? 'Accesso...' : 'Accedi'}
               </button>
-            </div>
-            <button type="submit">Accedi</button>
-          </form>
+            </form>
+          </div>
+
+          {/* Form di Registrazione */}
+          <div className="form-panel">
+            <h2>Registrati</h2>
+            <form onSubmit={handleSubmitRegister(handleRegister)}>
+              <div>
+                <input
+                  type="email"
+                  placeholder="Email"
+                  {...registerRegister('email')}
+                  className={registerErrors.email ? 'error' : ''}
+                />
+                {registerErrors.email && (
+                  <span className="error-message">{registerErrors.email.message}</span>
+                )}
+              </div>
+
+              <div className="password-container">
+                <input
+                  type={showRegisterPassword ? 'text' : 'password'}
+                  placeholder="Password"
+                  {...registerRegister('password')}
+                  className={registerErrors.password ? 'error' : ''}
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowRegisterPassword(!showRegisterPassword)}
+                >
+                  {showRegisterPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
+                {registerErrors.password && (
+                  <span className="error-message password-error">{registerErrors.password.message}</span>
+                )}
+              </div>
+
+              <button 
+                type="submit" 
+                disabled={isLoading}
+                className={isLoading ? 'loading' : ''}
+              >
+                {isLoading ? 'Registrazione...' : 'Registrati'}
+              </button>
+            </form>
+          </div>
         </div>
 
-        <div className="form-panel register-panel">
-          <h2>Registrati</h2>
-          <form onSubmit={handleRegister}>
-            <input
-              type="email"
-              placeholder="Email"
-              required
-              value={registerEmail}
-              onChange={(e) => setRegisterEmail(e.target.value)}
-            />
-            <div className="password-container">
-              <input
-                type={showRegisterPassword ? 'text' : 'password'}
-                placeholder="Password"
-                required
-                value={registerPassword}
-                onChange={(e) => setRegisterPassword(e.target.value)}
-              />
-              <button
-                type="button"
-                className="password-toggle"
-                onClick={() => setShowRegisterPassword(!showRegisterPassword)}
-              >
-                {showRegisterPassword ? <FaEyeSlash /> : <FaEye />}
-              </button>
-            </div>
-            <button type="submit">Registrati</button>
-          </form>
-        </div>
-
+        {/* Overlay Toggle */}
         <div className="toggle-overlay">
           <div className="toggle-content">
             <h2>{isLogin ? 'Hai già un account?' : 'Nuovo qui?'}</h2>
-            <button onClick={() => setIsLogin(!isLogin)}>
-              {isLogin ? 'Accedi' : 'Registrati'}
+            <p>
+              {isLogin 
+                ?'Accedi per continuare con le tue attività'
+                : 'Registrati per iniziare a gestire le tue attività'
+              }
+            </p>
+            <button onClick={toggleMode} disabled={isLoading}>
+              {isLogin ? 'Accedi' : 'Registrati' }
             </button>
           </div>
         </div>
-      </div>
 
-      {message && <p className="auth-message">{message}</p>}
+        {/* Messaggio */}
+        {message && (
+          <div className={`auth-message ${message.includes('successo') ? 'success' : 'error'}`}>
+            {message}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
