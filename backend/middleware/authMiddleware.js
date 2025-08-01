@@ -1,25 +1,27 @@
+// backend/middleware/authMiddleware.js
+
 import jwt from 'jsonwebtoken';
 
 const authMiddleware = (req, res, next) => {
+  // Prendi il token dall’header Authorization (tipo: "Bearer <token>")
   const authHeader = req.headers.authorization;
-
-  // Verifica che il token esista ed inizi con "Bearer"
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ message: 'Token mancante o non valido.' });
   }
 
-  const token = authHeader.split(' ')[1];
+  const token = authHeader.replace('Bearer ', '');
 
   try {
-    // Verifica il token
+    // Decodifica il token usando la tua secret
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // Aggiunge l'ID utente alla richiesta, così possiamo usarlo nei controller
+    // Associa l'id utente a req.userId (e volendo anche l’user completo)
     req.userId = decoded.userId;
+    req.user = { id: decoded.userId, email: decoded.email };
 
-    next(); // passa al controller successivo
-  } catch (err) {
-    console.error('JWT verification error:', err);
+    // Passa al controller successivo
+    next();
+  } catch (error) {
     return res.status(401).json({ message: 'Token non valido o scaduto.' });
   }
 };
