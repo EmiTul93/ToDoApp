@@ -1,0 +1,21 @@
+/* Background leggero, soft blur, sfumato */
+.home-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #2660ff 0%, #eef8ff 100%);
+  padding: 2rem 7rem;
+  font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #1e293b;
+  text-align: center;
+  margin-top: 3%;
+  margin-bottom: 3%;
+}
+
+/* Titolo ToDoApp */
+.home-container > h1 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 3rem;
+  margin-bottom: 2rem;
+  color: #3730a3;
+  text-shadow: 1px 1px 3px rgba(55, 48, 163, 0.4);
+}

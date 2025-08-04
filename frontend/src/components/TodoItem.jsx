@@ -1,4 +1,4 @@
-// components/TodoItem.jsx - COMPONENTE CORRETTO PER SINGOLO ITEM
+// components/TodoItem.jsx
 import React from 'react';
 import './ToDoList.css';
 
@@ -13,7 +13,7 @@ const TodoItem = ({ todo, onDelete, onUpdate, loading }) => {
   const getPriorityLabel = (priority) => {
     const labels = {
       low: "Bassa",
-      medium: "Media", 
+      medium: "Media",
       high: "Alta"
     };
     return labels[priority] || priority;
@@ -43,9 +43,10 @@ const TodoItem = ({ todo, onDelete, onUpdate, loading }) => {
           <div className="todo-actions">
             <button
               onClick={handleStatusToggle}
-              className={`status-btn ${todo.status}`}
+              className={`status-badge status-badge-${todo.status}`}
               disabled={loading}
               title={todo.status === 'completed' ? 'Segna come attiva' : 'Segna come completata'}
+              aria-label={todo.status === 'completed' ? 'Segna come attiva' : 'Segna come completata'}
             >
               {todo.status === 'completed' ? '↶' : '✓'}
             </button>
@@ -54,30 +55,31 @@ const TodoItem = ({ todo, onDelete, onUpdate, loading }) => {
               className="todo-delete-btn"
               disabled={loading}
               title="Elimina todo"
+              aria-label="Elimina todo"
             >
               {loading ? '...' : '🗑️'}
             </button>
           </div>
         </div>
-        
+
         {todo.description && (
           <p className="todo-description">{todo.description}</p>
         )}
-        
+
         <div className="todo-meta">
-          <span className={`priority priority-${todo.priority}`}>
+          <span className={`priority-badge priority-badge-${todo.priority}`}>
             Priorità: {getPriorityLabel(todo.priority)}
           </span>
-          <span className={`status status-${todo.status}`}>
+          <span className={`status-badge status-badge-${todo.status}`}>
             Status: {getStatusLabel(todo.status)}
           </span>
           {todo.due_date && (
-            <span className="due-date">
+            <span className="todo-date">
               Scadenza: {formatDate(todo.due_date)}
             </span>
           )}
           {todo.created_at && (
-            <span className="created-date">
+            <span className="todo-date">
               Creata: {formatDate(todo.created_at)}
             </span>
           )}
