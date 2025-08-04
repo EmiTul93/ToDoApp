@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { useTodos } from '../hooks/useTodos';
 import TodoItem from '../components/TodoItem';
 import '../components/ToDoList.css'; // Importa gli stili corretti
+import './Home.css';
+
 
 const Home = () => {
   const { todos, loading, error, addTodo, updateTodo, deleteTodo, clearError } = useTodos();
