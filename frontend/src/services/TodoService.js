@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 // Configurazione base
-const API_BASE_URL = 'https://localhost:443/api';
+const API_BASE_URL = 'http://localhost:5000/api';
 const API_URL = `${API_BASE_URL}/todos`;
 
 // Timeout per le richieste (10 secondi)
@@ -15,10 +15,6 @@ const apiClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  // Configurazione per certificati self-signed (solo per sviluppo)
-  httpsAgent: process.env.NODE_ENV === 'development' ? {
-    rejectUnauthorized: false
-  } : undefined,
 });
 
 // Interceptor per aggiungere automaticamente il token di autenticazione
