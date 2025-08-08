@@ -196,5 +196,5 @@ const AuthForm = () => {
     </>
   );
 };
-
+  //this is all to delete
 export default AuthForm;
