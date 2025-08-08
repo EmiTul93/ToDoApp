@@ -196,5 +196,4 @@ const AuthForm = () => {
     </>
   );
 };
-  //this is all to delete brother
 export default AuthForm;
