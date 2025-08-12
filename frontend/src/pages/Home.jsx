@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { useTodos } from '../hooks/useTodos';
 import TodoItem from '../components/TodoItem';
 import '../components/ToDoList.css'; // Importa gli stili corretti
+import './Home.css';
+
 
 const Home = () => {
   const { todos, loading, error, addTodo, updateTodo, deleteTodo, clearError } = useTodos();
@@ -54,7 +56,7 @@ const Home = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    window.location.href = '/login';
+    window.location.href = '/';
   };
 
   return (
@@ -170,35 +172,45 @@ const Home = () => {
 
       {/* Lista todos */}
       <div className="todos-section">
-        {loading && todos.length === 0 ? (
-          <div className="loading-message">
-            <div className="spinner"></div>
-            <p>Caricamento todos...</p>
-          </div>
-        ) : todos.length === 0 ? (
-          <div className="empty-state">
-            <h3>Nessuna todo trovata</h3>
-            <p>Inizia aggiungendo la tua prima todo!</p>
-            <button 
-              onClick={() => setShowAddForm(true)}
-              className="add-first-todo-btn"
-            >
-              + Aggiungi la prima todo
-            </button>
-          </div>
-        ) : (
-          <ul className="todo-list">
-            {todos.map(todo => (
-              <TodoItem
-                key={todo.id}
-                todo={todo}
-                onDelete={deleteTodo}
-                onUpdate={updateTodo}
-                loading={loading}
-              />
-            ))}
-          </ul>
-        )}
+        {(() => {
+          let content;
+          if (loading && todos.length === 0) {
+            content = (
+              <div className="loading-message">
+                <div className="spinner"></div>
+                <p>Caricamento todos...</p>
+              </div>
+            );
+          } else if (todos.length === 0) {
+            content = (
+              <div className="empty-state">
+                <h3>Nessuna todo trovata</h3>
+                <p>Inizia aggiungendo la tua prima todo!</p>
+                <button 
+                  onClick={() => setShowAddForm(true)}
+                  className="add-first-todo-btn"
+                >
+                  + Aggiungi la prima todo
+                </button>
+              </div>
+            );
+          } else {
+            content = (
+              <ul className="todo-list">
+                {todos.map(todo => (
+                  <TodoItem
+                    key={todo.id}
+                    todo={todo}
+                    onDelete={deleteTodo}
+                    onUpdate={updateTodo}
+                    loading={loading}
+                  />
+                ))}
+              </ul>
+            );
+          }
+          return content;
+        })()}
       </div>
 
       {/* Footer */}

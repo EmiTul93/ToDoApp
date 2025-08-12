@@ -142,18 +142,52 @@ app.use('/api/todos', todosRoutes);
 /* ----------------- ERROR HANDLING ----------------- */
 app.use(errors());
 app.use((err, req, res, next) => {
-  console.error(`[${new Date().toISOString()}] Error:`, err.message);
-  if (err.message === 'Non permesso da CORS policy') {
-    return res.status(403).json({ status: 'error', message: err.message });
+  console.error('Errore:', err);
+  
+  if (err.statusCode) {
+    return res.status(err.statusCode).json({ 
+      message: err.message || 'Errore di validazione' 
+    });
   }
-
-  const status = err.status || 500;
-  res.status(status).json({ status: 'error', message: err.message || 'Errore interno' });
+  
+  res.status(500).json({ message: 'Errore interno del server' });
 });
 
 app.use('*', (req, res) => {
   res.status(404).json({ status: 'error', message: 'Endpoint non trovato' });
 });
+
+// Error handler centrale
+app.use((err, req, res, next) => {
+  console.error('[Backend Error]', err); // Log dettagliato lato server
+
+  // Gestione Joi/validazione
+  if (err.isJoi || err.name === 'ValidationError') {
+    return res.status(400).json({
+      status: 'error',
+      type: 'validation',
+      message: err.details?.map(d => d.message).join(', ') || err.message,
+      errors: err.details || null
+    });
+  }
+
+  // Errore custom "Unauthorized"
+  if (err.status === 401 || err.name === 'UnauthorizedError') {
+    return res.status(401).json({
+      status: 'error',
+      type: 'authorization',
+      message: err.message || 'Non autorizzato'
+    });
+  }
+
+  // Generico (catch-all)
+  res.status(err.status || 500).json({
+    status: 'error',
+    type: err.type || 'server',
+    message: err.message || 'Errore interno del server'
+  });
+});
+
 
 /* ----------------- SSL SETUP ----------------- */
 function loadSSLCert() {

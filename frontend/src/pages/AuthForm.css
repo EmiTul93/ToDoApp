@@ -7,7 +7,7 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: #396b9c;
+  background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   padding: 1rem;
 }
@@ -19,11 +19,17 @@
   height: auto;
   min-height: 600px;
   background: #fff;
-  border-radius: 20px;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  border-radius: 32px;
+  box-shadow: 0 8px 40px rgba(60, 60, 100, 0.15);
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  animation: fadein 0.8s cubic-bezier(.39,.58,.57,1) both;
+}
+
+@keyframes fadein {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 .forms-wrapper {
@@ -69,6 +75,7 @@ h2 {
   font-size: 1.5rem;
   margin-bottom: 1.5rem;
   color: #1e293b;
+  font-weight: 700;
 }
 
 .toggle-content h2 {
@@ -76,97 +83,75 @@ h2 {
   font-weight: 600;
 }
 
-input {
+input, select {
   width: 100%;
-  padding: 0.8rem;
+  padding: 0.8rem 1rem;
   margin-bottom: 1rem;
-  border: 2px solid #000000;
+  border: 1.5px solid #d1d5db;
   border-radius: 8px;
-  font-size: 0.9rem;
-  transition: border-color 0.3s;
+  font-size: 0.95rem;
   box-sizing: border-box;
+  transition: border-color 0.3s;
 }
 
-input:focus {
+input:focus, select:focus {
   outline: none;
   border-color: #6366f1;
+  box-shadow: 0 0 0 0.2rem #6366f140;
 }
 
 button[type='submit'] {
   width: 100%;
   padding: 0.8rem;
-  background: #6366f1;
+  background: linear-gradient(90deg, #6366f1 20%, #a78bfa 100%);
   color: white;
   border: none;
   border-radius: 8px;
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 1rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background 0.3s, box-shadow 0.3s;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
 }
 
 button[type='submit']:hover {
   background: #4f46e5;
+  box-shadow: 0 6px 22px rgba(99, 102, 241, 0.6);
 }
 
-.toggle-overlay button {
-  margin-top: 1rem;
-  padding: 0.7rem 1.5rem;
-  background: white;
-  color: #6366f1;
-  border: none;
-  border-radius: 50px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  font-size: 0.9rem;
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
-.toggle-overlay button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-}
-
-/* Message */
-.auth-message {
-  position: absolute;
-  bottom: 1rem;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(239, 68, 68, 0.9);
-  color: white;
-  padding: 0.6rem 1.2rem;
-  border-radius: 50px;
-  font-weight: 500;
-  text-align: center;
-  animation: fadeIn 0.5s;
-  z-index: 3;
-  font-size: 0.8rem;
-  max-width: 90%;
-}
-
-@keyframes fadeIn {
-  from { 
-    opacity: 0; 
-    transform: translateX(-50%) translateY(20px); 
-  }
-  to { 
-    opacity: 1; 
-    transform: translateX(-50%) translateY(0); 
-  }
-}
-
-/* Password Container */
+/* Password toggle */
 .password-container {
   position: relative;
   width: 100%;
   margin-bottom: 1rem;
+  min-height: 68px; /* altezza fissa per mantenere spazio errore */
 }
 
 .password-container input {
   padding-right: 3rem;
   margin-bottom: 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* Posiziona messaggio errore assoluto sotto input */
+.password-container .error-message,
+.password-container .password-error {
+  position: absolute;
+  left: 0;
+  bottom: -1.3em;
+  width: 100%;
+  margin: 0;
+  padding: 0 8px;
+  font-size: 0.78rem;
+  color: #dc2626;
+  background: transparent;
+  z-index: 1;
 }
 
 .password-toggle {
@@ -184,6 +169,8 @@ button[type='submit']:hover {
   justify-content: center;
   width: 2rem;
   height: 2rem;
+  transition: color 0.3s;
+  z-index: 2;
 }
 
 .password-toggle:hover {
@@ -191,13 +178,99 @@ button[type='submit']:hover {
 }
 
 .password-toggle svg {
-  width: 1rem;
-  height: 1rem;
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+/* Message */
+.auth-message {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(239, 68, 68, 0.9);
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 50px;
+  font-weight: 500;
+  text-align: center;
+  animation: fadeIn 0.5s;
+  z-index: 3;
+  font-size: 0.9rem;
+  max-width: 90%;
+}
+
+.auth-message.success {
+  background: rgba(16, 185, 129, 0.9);
+}
+
+.auth-message.error {
+  background: rgba(239, 68, 68, 0.9);
+}
+
+@keyframes fadeIn {
+  from { 
+    opacity: 0; 
+    transform: translateX(-50%) translateY(20px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateX(-50%) translateY(0); 
+  }
+}
+
+/* Validation error styles */
+.error-message {
+  color: #dc2626;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  display: block;
+  line-height: 1.2;
+}
+
+.password-error {
+  margin-top: 0.5rem;
+  font-size: 0.7rem;
+  line-height: 1.3;
+}
+
+input.error {
+  border-color: #dc2626 !important;
+  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.15);
+}
+
+input.error:focus {
+  border-color: #dc2626 !important;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
+}
+
+/* Loading button animation */
+button.loading {
+  position: relative;
+}
+
+button.loading::after {
+  content: '';
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 12px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: translateY(-50%) rotate(360deg); }
 }
 
 /* ==========================================================================
-   SMALL DEVICES - Large phones (≥ 576px)
+   MEDIA QUERIES
    ========================================================================== */
+
 @media (min-width: 576px) {
   .auth-container {
     padding: 1.5rem;
@@ -216,14 +289,14 @@ button[type='submit']:hover {
     font-size: 1.6rem;
   }
   
-  input {
-    padding: 0.9rem;
-    font-size: 0.95rem;
+  input, select {
+    padding: 0.9rem 1.1rem;
+    font-size: 1rem;
   }
   
   button[type='submit'] {
     padding: 0.9rem;
-    font-size: 0.95rem;
+    font-size: 1rem;
   }
   
   .auth-message {
@@ -231,9 +304,6 @@ button[type='submit']:hover {
   }
 }
 
-/* ==========================================================================
-   MEDIUM DEVICES - Tablets (≥ 768px)
-   ========================================================================== */
 @media (min-width: 768px) {
   .auth-container {
     align-items: center;
@@ -257,7 +327,7 @@ button[type='submit']:hover {
     padding: 2.5rem;
   }
   
-  /* Overlay - Horizontal for tablets+ */
+  /* Overlay horizontal for tablets+ */
   .toggle-overlay {
     width: 50%;
     height: 100%;
@@ -272,8 +342,8 @@ button[type='submit']:hover {
     margin-bottom: 2rem;
   }
   
-  input {
-    padding: 1rem;
+  input, select {
+    padding: 1rem 1.2rem;
     margin-bottom: 1.2rem;
     font-size: 1rem;
   }
@@ -306,9 +376,6 @@ button[type='submit']:hover {
   }
 }
 
-/* ==========================================================================
-   LARGE DEVICES - Laptops/Desktops (≥ 992px)
-   ========================================================================== */
 @media (min-width: 992px) {
   .auth-box {
     width: 800px;
@@ -324,7 +391,7 @@ button[type='submit']:hover {
     margin-bottom: 2rem;
   }
   
-  input {
+  input, select {
     margin-bottom: 1.5rem;
   }
   
@@ -338,9 +405,6 @@ button[type='submit']:hover {
   }
 }
 
-/* ==========================================================================
-   EXTRA LARGE DEVICES - Large Desktops (≥ 1200px)
-   ========================================================================== */
 @media (min-width: 1200px) {
   .auth-box {
     width: 900px;
@@ -356,9 +420,6 @@ button[type='submit']:hover {
   }
 }
 
-/* ==========================================================================
-   ULTRA WIDE SCREENS (≥ 1440px)
-   ========================================================================== */
 @media (min-width: 1440px) {
   .auth-container {
     padding: 3rem;
@@ -374,9 +435,6 @@ button[type='submit']:hover {
   }
 }
 
-/* ==========================================================================
-   LANDSCAPE ORIENTATION - Mobile devices in landscape
-   ========================================================================== */
 @media (max-height: 500px) and (orientation: landscape) {
   .auth-container {
     align-items: flex-start;
@@ -397,8 +455,8 @@ button[type='submit']:hover {
     margin-bottom: 1rem;
   }
   
-  input {
-    padding: 0.7rem;
+  input, select {
+    padding: 0.7rem 0.9rem;
     margin-bottom: 0.8rem;
   }
   
@@ -412,22 +470,16 @@ button[type='submit']:hover {
   }
 }
 
-/* ==========================================================================
-   HIGH DPI DISPLAYS - Retina and similar
-   ========================================================================== */
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .auth-box {
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
   }
   
-  input {
+  input, select {
     border-width: 1px;
   }
 }
 
-/* ==========================================================================
-   ACCESSIBILITY - Reduced motion preference
-   ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
   .toggle-overlay {
     transition: none;
@@ -442,9 +494,6 @@ button[type='submit']:hover {
   }
 }
 
-/* ==========================================================================
-   PRINT STYLES
-   ========================================================================== */
 @media print {
   .auth-container {
     background: white;
@@ -458,80 +507,5 @@ button[type='submit']:hover {
   
   .toggle-overlay {
     display: none;
-  }
-}
-
-/* Aggiungi questi stili al tuo CSS esistente */
-
-/* Stili per errori di validazione */
-.error-message {
-  color: #dc2626;
-  font-size: 0.75rem;
-  margin-top: 0.25rem;
-  display: block;
-  line-height: 1.2;
-}
-
-.password-error {
-  margin-top: 0.5rem;
-  font-size: 0.7rem;
-  line-height: 1.3;
-}
-
-input.error {
-  border-color: #dc2626 !important;
-  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.1);
-}
-
-input.error:focus {
-  border-color: #dc2626 !important;
-  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
-}
-
-/* Stili per stati di loading */
-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-button.loading {
-  position: relative;
-}
-
-button.loading::after {
-  content: '';
-  position: absolute;
-  right: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 12px;
-  height: 12px;
-  border: 2px solid transparent;
-  border-top: 2px solid currentColor;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: translateY(-50%) rotate(360deg); }
-}
-
-/* Messaggio di successo */
-.auth-message.success {
-  background: rgba(16, 185, 129, 0.9);
-}
-
-.auth-message.error {
-  background: rgba(239, 68, 68, 0.9);
-}
-
-/* Responsive per messaggi di errore */
-@media (max-width: 576px) {
-  .error-message {
-    font-size: 0.7rem;
-  }
-  
-  .password-error {
-    font-size: 0.65rem;
   }
 }
