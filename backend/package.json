@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "type": "module",
   "main": "index.js",
+  "description": "",
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --passWithNoTests"
   },
   "keywords": [],
   "author": "",
@@ -32,5 +33,7 @@
     "jest": "^30.0.5",
     "nodemon": "^3.0.2"
   },
-  "description": ""
+  "jest": {
+    "testEnvironment": "node"
+  }
 }
