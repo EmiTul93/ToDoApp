@@ -3,6 +3,7 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import Home from '../pages/Home';
 import * as todoService from '../services/TodoService';
+import '../ToDoList.css';
 
 // MOCK del servizio addTodo e fetchTodos
 jest.mock('../services/TodoService');
