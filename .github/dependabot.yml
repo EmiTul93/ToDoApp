@@ -1,0 +1,7 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"       # percorso della root (modifica in /backend o /frontend se hai package.json singoli)
+    schedule:
+      interval: "weekly"  # oppure "daily", "monthly"
+    open-pull-requests-limit: 5
