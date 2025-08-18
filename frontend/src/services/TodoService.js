@@ -41,14 +41,15 @@ apiClient.interceptors.response.use(
       localStorage.removeItem('token');
       window.location.href = '/'; // Redirect al login
     }
-    
+
     // Aggiungi informazioni aggiuntive all'errore
     if (error.code === 'ECONNABORTED') {
-      error.message = 'Timeout della richiesta. Il server potrebbe essere lento.';
+      error.message =
+        'Timeout della richiesta. Il server potrebbe essere lento.';
     } else if (error.code === 'ERR_NETWORK') {
       error.message = 'Errore di rete. Controlla la connessione internet.';
     }
-    
+
     return Promise.reject(error);
   }
 );
@@ -99,7 +100,7 @@ export const addTodo = async (todo) => {
       const dueDate = new Date(todo.due_date);
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-      
+
       if (dueDate < today) {
         throw new Error('La data di scadenza non può essere nel passato');
       }
@@ -110,13 +111,13 @@ export const addTodo = async (todo) => {
       description: todo.description?.trim() || '',
       due_date: todo.due_date || null,
       priority: todo.priority || 'medium',
-      status: todo.status || 'pending'
+      status: todo.status || 'pending',
     };
 
     const response = await apiClient.post('/todos', payload);
     return response.data.todo;
   } catch (error) {
-    console.error('Errore nell\'aggiunta della todo:', error);
+    console.error("Errore nell'aggiunta della todo:", error);
     throw error;
   }
 };
@@ -156,7 +157,7 @@ export const updateTodo = async (id, updates) => {
 
     await apiClient.put(`/todos/${id}`, cleanUpdates);
   } catch (error) {
-    console.error('Errore nell\'aggiornamento della todo:', error);
+    console.error("Errore nell'aggiornamento della todo:", error);
     throw error;
   }
 };
@@ -174,7 +175,7 @@ export const deleteTodo = async (id) => {
 
     await apiClient.delete(`/todos/${id}`);
   } catch (error) {
-    console.error('Errore nell\'eliminazione della todo:', error);
+    console.error("Errore nell'eliminazione della todo:", error);
     throw error;
   }
 };

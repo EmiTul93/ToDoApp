@@ -8,16 +8,17 @@ import db from '../db.js';
 const router = express.Router();
 
 // 📝 POST /api/auth/register - Registrazione con validazione
-router.post('/register', 
+router.post(
+  '/register',
   celebrate({
-    [Segments.BODY]: registerSchema
+    [Segments.BODY]: registerSchema,
   }),
   async (req, res) => {
     const { email, password } = req.body;
 
     try {
       // Verifica se l'utente esiste già
-      const checkUserQuery = "SELECT id FROM users WHERE email = ?";
+      const checkUserQuery = 'SELECT id FROM users WHERE email = ?';
       const existingUser = await new Promise((resolve, reject) => {
         db.query(checkUserQuery, [email], (err, results) => {
           if (err) reject(err);
@@ -34,7 +35,8 @@ router.post('/register',
       const hashedPassword = await bcrypt.hash(password, saltRounds);
 
       // Inserimento nel database
-      const insertUserQuery = "INSERT INTO users (email, password, created_at) VALUES (?, ?, NOW())";
+      const insertUserQuery =
+        'INSERT INTO users (email, password, created_at) VALUES (?, ?, NOW())';
       await new Promise((resolve, reject) => {
         db.query(insertUserQuery, [email, hashedPassword], (err, result) => {
           if (err) reject(err);
@@ -43,7 +45,6 @@ router.post('/register',
       });
 
       res.status(201).json({ message: 'Utente registrato con successo.' });
-
     } catch (error) {
       console.error('Errore durante la registrazione:', error);
       res.status(500).json({ message: 'Errore del server.' });
@@ -52,16 +53,18 @@ router.post('/register',
 );
 
 // 🔐 POST /api/auth/login - Login con validazione
-router.post('/login',
+router.post(
+  '/login',
   celebrate({
-    [Segments.BODY]: loginSchema
+    [Segments.BODY]: loginSchema,
   }),
   async (req, res) => {
     const { email, password } = req.body;
 
     try {
       // Verifica utente
-      const getUserQuery = "SELECT id, email, password FROM users WHERE email = ?";
+      const getUserQuery =
+        'SELECT id, email, password FROM users WHERE email = ?';
       const users = await new Promise((resolve, reject) => {
         db.query(getUserQuery, [email], (err, results) => {
           if (err) reject(err);
@@ -88,12 +91,11 @@ router.post('/login',
         { expiresIn: '24h' }
       );
 
-      res.json({ 
+      res.json({
         message: 'Login effettuato con successo.',
         token,
-        user: { id: user.id, email: user.email }
+        user: { id: user.id, email: user.email },
       });
-
     } catch (error) {
       console.error('Errore durante il login:', error);
       res.status(500).json({ message: 'Errore del server.' });
