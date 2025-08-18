@@ -27,26 +27,34 @@ describe('Integration test Home', () => {
     // Mock addTodo: restituisce nuovo todo
     todoService.addTodo.mockResolvedValue(newTodo);
     // Mock fetchTodos aggiornato dopo aggiunta: contiene nuovo todo
-    todoService.fetchTodos.mockResolvedValueOnce([])       // primo caricamento vuoto
-                      .mockResolvedValueOnce([newTodo]);   // dopo aggiunta todo
+    todoService.fetchTodos
+      .mockResolvedValueOnce([]) // primo caricamento vuoto
+      .mockResolvedValueOnce([newTodo]); // dopo aggiunta todo
 
     render(<Home />);
 
     // Attendi caricamento iniziale
-    await waitFor(() => expect(todoService.fetchTodos).toHaveBeenCalledTimes(1));
+    await waitFor(() =>
+      expect(todoService.fetchTodos).toHaveBeenCalledTimes(1)
+    );
 
     // Apri il form cliccando il bottone
     fireEvent.click(screen.getByText(/\+ nuova todo/i));
 
     // Attendi visualizzazione campo Titolo nel form
     await waitFor(() => {
-      expect(screen.getByPlaceholderText(/inserisci il titolo della todo/i)).toBeInTheDocument();
+      expect(
+        screen.getByPlaceholderText(/inserisci il titolo della todo/i)
+      ).toBeInTheDocument();
     });
 
     // Inserisci titolo e descrizione
-    fireEvent.change(screen.getByPlaceholderText(/inserisci il titolo della todo/i), {
-      target: { value: 'Test Todo' },
-    });
+    fireEvent.change(
+      screen.getByPlaceholderText(/inserisci il titolo della todo/i),
+      {
+        target: { value: 'Test Todo' },
+      }
+    );
 
     fireEvent.change(screen.getByPlaceholderText(/descrizione opzionale/i), {
       target: { value: 'Descrizione test' },

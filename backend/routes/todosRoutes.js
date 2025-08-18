@@ -3,17 +3,21 @@ import express from 'express';
 import authMiddleware from '../middleware/authMiddleware.js';
 import db from '../db.js';
 import { validate } from '../middleware/validation.js';
-import { createTodoSchema, updateTodoSchema, idSchema } from '../validators/schemas.js';
+import {
+  createTodoSchema,
+  updateTodoSchema,
+  idSchema,
+} from '../validators/schemas.js';
 
 const router = express.Router();
 
 // LISTA ToDo SOLO utente corrente
 router.get('/', authMiddleware, async (req, res) => {
   console.log('🔍 GET /todos - userId:', req.userId);
-  
+
   const userId = req.userId;
   db.query(
-    "SELECT * FROM todos WHERE user_id = ? ORDER BY created_at DESC",
+    'SELECT * FROM todos WHERE user_id = ? ORDER BY created_at DESC',
     [userId],
     (err, rows) => {
       if (err) {
@@ -31,23 +35,25 @@ router.post('/', authMiddleware, async (req, res) => {
   console.log('🚀 POST /todos iniziato');
   console.log('👤 userId dal token:', req.userId);
   console.log('📝 Body ricevuto:', req.body);
-  
+
   try {
     const userId = req.userId;
-    
+
     // Verifica che userId esista
     if (!userId) {
       console.error('❌ userId mancante dal token');
-      return res.status(401).json({ message: 'Token non valido - userId mancante' });
+      return res
+        .status(401)
+        .json({ message: 'Token non valido - userId mancante' });
     }
 
     // Estrai dati con valori di default
-    const { 
-      title, 
-      description = '', 
-      due_date = null, 
-      priority = 'medium', 
-      status = 'pending' 
+    const {
+      title,
+      description = '',
+      due_date = null,
+      priority = 'medium',
+      status = 'pending',
     } = req.body;
 
     console.log('📋 Dati processati:', {
@@ -56,7 +62,7 @@ router.post('/', authMiddleware, async (req, res) => {
       description,
       due_date,
       priority,
-      status
+      status,
     });
 
     // Validazione manuale base
@@ -67,7 +73,9 @@ router.post('/', authMiddleware, async (req, res) => {
 
     if (title.length > 100) {
       console.error('❌ Titolo troppo lungo:', title.length);
-      return res.status(400).json({ message: 'Titolo troppo lungo (max 100 caratteri)' });
+      return res
+        .status(400)
+        .json({ message: 'Titolo troppo lungo (max 100 caratteri)' });
     }
 
     // Validazione priority
@@ -89,9 +97,16 @@ router.post('/', authMiddleware, async (req, res) => {
     // Query di inserimento
     const query = `INSERT INTO todos (user_id, title, description, due_date, priority, status, created_at)
                    VALUES (?, ?, ?, ?, ?, ?, NOW())`;
-    
-    const values = [userId, title.trim(), description, due_date, priority, status];
-    
+
+    const values = [
+      userId,
+      title.trim(),
+      description,
+      due_date,
+      priority,
+      status,
+    ];
+
     console.log('🗃️ Query:', query);
     console.log('🗃️ Values:', values);
 
@@ -100,38 +115,38 @@ router.post('/', authMiddleware, async (req, res) => {
         console.error('❌ Errore inserimento DB:', err);
         console.error('❌ Errore codice:', err.code);
         console.error('❌ Errore SQL:', err.sqlMessage);
-        
+
         // Errori specifici del database
         if (err.code === 'ER_NO_SUCH_TABLE') {
-          return res.status(500).json({ 
+          return res.status(500).json({
             message: 'Tabella todos non esiste nel database',
-            error: err.message 
-          });
-        }
-        
-        if (err.code === 'ER_BAD_FIELD_ERROR') {
-          return res.status(500).json({ 
-            message: 'Colonna non esistente nella tabella todos',
-            error: err.message 
-          });
-        }
-        
-        if (err.code === 'ER_DATA_TOO_LONG') {
-          return res.status(400).json({ 
-            message: 'Dati troppo lunghi per il campo',
-            error: err.message 
+            error: err.message,
           });
         }
 
-        return res.status(500).json({ 
+        if (err.code === 'ER_BAD_FIELD_ERROR') {
+          return res.status(500).json({
+            message: 'Colonna non esistente nella tabella todos',
+            error: err.message,
+          });
+        }
+
+        if (err.code === 'ER_DATA_TOO_LONG') {
+          return res.status(400).json({
+            message: 'Dati troppo lunghi per il campo',
+            error: err.message,
+          });
+        }
+
+        return res.status(500).json({
           message: 'Errore nel salvataggio ToDo',
           error: err.message,
-          code: err.code
+          code: err.code,
         });
       }
 
       console.log('✅ Todo inserita con successo, ID:', result.insertId);
-      
+
       const newTodo = {
         id: result.insertId,
         user_id: userId,
@@ -140,22 +155,21 @@ router.post('/', authMiddleware, async (req, res) => {
         due_date,
         priority,
         status,
-        created_at: new Date().toISOString()
+        created_at: new Date().toISOString(),
       };
 
       console.log('📤 Risposta inviata:', newTodo);
 
       res.status(201).json({
         message: 'ToDo creata con successo',
-        todo: newTodo
+        todo: newTodo,
       });
     });
-
   } catch (error) {
     console.error('❌ Errore generale POST /todos:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       message: 'Errore interno del server',
-      error: error.message 
+      error: error.message,
     });
   }
 });
@@ -166,20 +180,28 @@ router.put(
   authMiddleware,
   validate({ params: idSchema, body: updateTodoSchema }),
   async (req, res) => {
-    console.log('🔄 PUT /todos/:id - userId:', req.userId, 'todoId:', req.params.id);
-    
+    console.log(
+      '🔄 PUT /todos/:id - userId:',
+      req.userId,
+      'todoId:',
+      req.params.id
+    );
+
     const userId = req.userId;
     const todoId = req.params.id;
     const fields = Object.keys(req.body);
-    
+
     if (!fields.length) {
       return res.status(400).json({ message: 'Nessun campo da aggiornare.' });
     }
 
-    const setClause = fields.map(k => `${k} = ?`).join(', ');
-    const values = [...fields.map(f => req.body[f]), todoId, userId];
+    const setClause = fields.map((k) => `${k} = ?`).join(', ');
+    const values = [...fields.map((f) => req.body[f]), todoId, userId];
 
-    console.log('🗃️ Query UPDATE:', `UPDATE todos SET ${setClause} WHERE id = ? AND user_id = ?`);
+    console.log(
+      '🗃️ Query UPDATE:',
+      `UPDATE todos SET ${setClause} WHERE id = ? AND user_id = ?`
+    );
     console.log('🗃️ Values:', values);
 
     db.query(
@@ -188,11 +210,15 @@ router.put(
       (err, result) => {
         if (err) {
           console.error('❌ Errore UPDATE:', err);
-          return res.status(500).json({ message: 'Errore update ToDo: ' + err.message });
+          return res
+            .status(500)
+            .json({ message: 'Errore update ToDo: ' + err.message });
         }
-        
+
         if (result.affectedRows === 0) {
-          console.log('⚠️ Nessuna riga aggiornata - Todo non trovata o non autorizzato');
+          console.log(
+            '⚠️ Nessuna riga aggiornata - Todo non trovata o non autorizzato'
+          );
           return res.status(404).json({ message: 'ToDo non trovata.' });
         }
 
@@ -209,23 +235,34 @@ router.delete(
   authMiddleware,
   validate({ params: idSchema }),
   async (req, res) => {
-    console.log('🗑️ DELETE /todos/:id - userId:', req.userId, 'todoId:', req.params.id);
-    
+    console.log(
+      '🗑️ DELETE /todos/:id - userId:',
+      req.userId,
+      'todoId:',
+      req.params.id
+    );
+
     const userId = req.userId;
     const todoId = req.params.id;
-    
+
     db.query(
       'DELETE FROM todos WHERE id = ? AND user_id = ?',
       [todoId, userId],
       (err, result) => {
         if (err) {
           console.error('❌ Errore DELETE:', err);
-          return res.status(500).json({ message: 'Errore nell\'eliminazione ToDo: ' + err.message });
+          return res
+            .status(500)
+            .json({ message: "Errore nell'eliminazione ToDo: " + err.message });
         }
-        
+
         if (result.affectedRows === 0) {
-          console.log('⚠️ Nessuna riga eliminata - Todo non trovata o non autorizzato');
-          return res.status(404).json({ message: 'ToDo non trovata o non autorizzato.' });
+          console.log(
+            '⚠️ Nessuna riga eliminata - Todo non trovata o non autorizzato'
+          );
+          return res
+            .status(404)
+            .json({ message: 'ToDo non trovata o non autorizzato.' });
         }
 
         console.log('✅ Todo eliminata con successo');

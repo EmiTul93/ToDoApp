@@ -2,21 +2,13 @@ import * as yup from 'yup';
 
 // Schema per login
 export const loginSchema = yup.object({
-  email: yup
-    .string()
-    .email('Email non valida')
-    .required('Email obbligatoria'),
-  password: yup
-    .string()
-    .required('Password obbligatoria')
+  email: yup.string().email('Email non valida').required('Email obbligatoria'),
+  password: yup.string().required('Password obbligatoria'),
 });
 
 // Schema per registrazione
 export const registerSchema = yup.object({
-  email: yup
-    .string()
-    .email('Email non valida')
-    .required('Email obbligatoria'),
+  email: yup.string().email('Email non valida').required('Email obbligatoria'),
   password: yup
     .string()
     .min(8, 'Password deve avere almeno 8 caratteri')
@@ -24,7 +16,7 @@ export const registerSchema = yup.object({
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])/,
       'Password deve contenere almeno: 1 minuscola, 1 maiuscola, 1 numero, 1 carattere speciale'
     )
-    .required('Password obbligatoria')
+    .required('Password obbligatoria'),
 });
 
 // Schema per creazione ToDo
@@ -50,7 +42,7 @@ export const createTodoSchema = yup.object({
   status: yup
     .string()
     .oneOf(['pending', 'in_progress', 'completed'], 'Status non valido')
-    .default('pending')
+    .default('pending'),
 });
 
 // Schema per aggiornamento ToDo
@@ -64,13 +56,11 @@ export const updateTodoSchema = yup.object({
     .string()
     .max(500, 'Descrizione massimo 500 caratteri')
     .nullable(),
-  due_date: yup
-    .date()
-    .nullable(),
+  due_date: yup.date().nullable(),
   priority: yup
     .string()
     .oneOf(['low', 'medium', 'high'], 'Priorità non valida'),
   status: yup
     .string()
-    .oneOf(['pending', 'in_progress', 'completed'], 'Status non valido')
+    .oneOf(['pending', 'in_progress', 'completed'], 'Status non valido'),
 });

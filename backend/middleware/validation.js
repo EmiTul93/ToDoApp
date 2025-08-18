@@ -8,7 +8,7 @@ export const validate = (schema) => {
     const validationOptions = {
       abortEarly: false,
       allowUnknown: false,
-      stripUnknown: true
+      stripUnknown: true,
     };
 
     const toValidate = {};
@@ -18,14 +18,19 @@ export const validate = (schema) => {
     if (schema.headers) toValidate.headers = req.headers;
 
     const schemaToValidate = Joi.object(schema);
-    const { error, value } = schemaToValidate.validate(toValidate, validationOptions);
+    const { error, value } = schemaToValidate.validate(
+      toValidate,
+      validationOptions
+    );
 
     if (error) {
-      const errorMessage = error.details.map(detail => detail.message).join(', ');
+      const errorMessage = error.details
+        .map((detail) => detail.message)
+        .join(', ');
       return res.status(400).json({
         message: 'Errore di validazione',
         details: errorMessage,
-        errors: error.details
+        errors: error.details,
       });
     }
 

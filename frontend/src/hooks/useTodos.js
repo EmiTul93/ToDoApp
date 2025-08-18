@@ -1,10 +1,10 @@
 // hooks/useTodos.js - CUSTOM HOOK PER GESTIONE TODOS
 import { useState, useEffect, useCallback } from 'react';
-import { 
-  fetchTodos, 
-  addTodo as addTodoAPI, 
-  updateTodo as updateTodoAPI, 
-  deleteTodo as deleteTodoAPI 
+import {
+  fetchTodos,
+  addTodo as addTodoAPI,
+  updateTodo as updateTodoAPI,
+  deleteTodo as deleteTodoAPI,
 } from '../services/TodoService';
 
 export const useTodos = () => {
@@ -35,12 +35,12 @@ export const useTodos = () => {
     try {
       setLoading(true);
       setError('');
-      
+
       const newTodo = await addTodoAPI(todoData);
-      setTodos(prevTodos => [newTodo, ...prevTodos]);
+      setTodos((prevTodos) => [newTodo, ...prevTodos]);
       return true; // Successo
     } catch (err) {
-      console.error('Errore nell\'aggiunta della todo:', err);
+      console.error("Errore nell'aggiunta della todo:", err);
       setError(getErrorMessage(err));
       return false; // Fallimento
     } finally {
@@ -52,18 +52,18 @@ export const useTodos = () => {
     try {
       setLoading(true);
       setError('');
-      
+
       await updateTodoAPI(id, updates);
-      
+
       // Aggiorna lo stato locale
-      setTodos(prevTodos => 
-        prevTodos.map(todo => 
+      setTodos((prevTodos) =>
+        prevTodos.map((todo) =>
           todo.id === id ? { ...todo, ...updates } : todo
         )
       );
       return true;
     } catch (err) {
-      console.error('Errore nell\'aggiornamento della todo:', err);
+      console.error("Errore nell'aggiornamento della todo:", err);
       setError(getErrorMessage(err));
       return false;
     } finally {
@@ -75,14 +75,14 @@ export const useTodos = () => {
     try {
       setLoading(true);
       setError('');
-      
+
       await deleteTodoAPI(id);
-      
+
       // Rimuovi dallo stato locale
-      setTodos(prevTodos => prevTodos.filter(todo => todo.id !== id));
+      setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
       return true;
     } catch (err) {
-      console.error('Errore nell\'eliminazione della todo:', err);
+      console.error("Errore nell'eliminazione della todo:", err);
       setError(getErrorMessage(err));
       return false;
     } finally {
@@ -115,8 +115,12 @@ export const useTodos = () => {
     if (err.code === 'NETWORK_ERROR' || !navigator.onLine) {
       return 'Errore di connessione. Controlla la tua connessione internet.';
     }
-    
-    return err.response?.data?.message || err.message || 'Si è verificato un errore imprevisto.';
+
+    return (
+      err.response?.data?.message ||
+      err.message ||
+      'Si è verificato un errore imprevisto.'
+    );
   };
 
   return {
@@ -127,6 +131,6 @@ export const useTodos = () => {
     updateTodo,
     deleteTodo,
     clearError,
-    refreshTodos
+    refreshTodos,
   };
 };

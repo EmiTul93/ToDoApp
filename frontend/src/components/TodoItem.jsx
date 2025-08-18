@@ -4,26 +4,26 @@ import './ToDoList.css';
 
 const TodoItem = ({ todo, onDelete, onUpdate, loading }) => {
   const formatDate = (dateString) => {
-    if (!dateString) return "";
+    if (!dateString) return '';
     const date = new Date(dateString);
-    if (isNaN(date)) return "";
-    return date.toLocaleDateString("it-IT");
+    if (isNaN(date)) return '';
+    return date.toLocaleDateString('it-IT');
   };
 
   const getPriorityLabel = (priority) => {
     const labels = {
-      low: "Bassa",
-      medium: "Media",
-      high: "Alta"
+      low: 'Bassa',
+      medium: 'Media',
+      high: 'Alta',
     };
     return labels[priority] || priority;
   };
 
   const getStatusLabel = (status) => {
     const labels = {
-      pending: "Attiva",
-      completed: "Completata",
-      in_progress: "In Corso"
+      pending: 'Attiva',
+      completed: 'Completata',
+      in_progress: 'In Corso',
     };
     return labels[status] || status;
   };
@@ -45,8 +45,16 @@ const TodoItem = ({ todo, onDelete, onUpdate, loading }) => {
               onClick={handleStatusToggle}
               className={`status-badge status-badge-${todo.status}`}
               disabled={loading}
-              title={todo.status === 'completed' ? 'Segna come attiva' : 'Segna come completata'}
-              aria-label={todo.status === 'completed' ? 'Segna come attiva' : 'Segna come completata'}
+              title={
+                todo.status === 'completed'
+                  ? 'Segna come attiva'
+                  : 'Segna come completata'
+              }
+              aria-label={
+                todo.status === 'completed'
+                  ? 'Segna come attiva'
+                  : 'Segna come completata'
+              }
             >
               {todo.status === 'completed' ? '↶' : '✓'}
             </button>

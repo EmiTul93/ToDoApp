@@ -5,26 +5,30 @@ import TodoItem from '../components/TodoItem';
 import '../components/ToDoList.css'; // Importa gli stili corretti
 import './Home.css';
 
-
 const Home = () => {
-  const { todos, loading, error, addTodo, updateTodo, deleteTodo, clearError } = useTodos();
+  const { todos, loading, error, addTodo, updateTodo, deleteTodo, clearError } =
+    useTodos();
   const [showAddForm, setShowAddForm] = useState(false);
   const [newTodo, setNewTodo] = useState({
     title: '',
     description: '',
     priority: 'medium',
-    due_date: ''
+    due_date: '',
   });
 
   // Statistiche todos
   const totalTodos = todos.length;
-  const completedTodos = todos.filter(todo => todo.status === 'completed').length;
-  const pendingTodos = todos.filter(todo => todo.status === 'pending').length;
-  const inProgressTodos = todos.filter(todo => todo.status === 'in_progress').length;
+  const completedTodos = todos.filter(
+    (todo) => todo.status === 'completed'
+  ).length;
+  const pendingTodos = todos.filter((todo) => todo.status === 'pending').length;
+  const inProgressTodos = todos.filter(
+    (todo) => todo.status === 'in_progress'
+  ).length;
 
   const handleAddTodo = async (e) => {
     e.preventDefault();
-    
+
     if (!newTodo.title.trim()) {
       alert('Il titolo è obbligatorio');
       return;
@@ -32,7 +36,7 @@ const Home = () => {
 
     const success = await addTodo({
       ...newTodo,
-      due_date: newTodo.due_date || null
+      due_date: newTodo.due_date || null,
     });
 
     if (success) {
@@ -40,7 +44,7 @@ const Home = () => {
         title: '',
         description: '',
         priority: 'medium',
-        due_date: ''
+        due_date: '',
       });
       setShowAddForm(false);
     }
@@ -48,9 +52,9 @@ const Home = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setNewTodo(prev => ({
+    setNewTodo((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -67,24 +71,25 @@ const Home = () => {
         <div className="todo-stats">
           <span className="stat-item total">Totale: {totalTodos}</span>
           <span className="stat-item pending">Attive: {pendingTodos}</span>
-          <span className="stat-item in-progress">In Corso: {inProgressTodos}</span>
-          <span className="stat-item completed">Completate: {completedTodos}</span>
+          <span className="stat-item in-progress">
+            In Corso: {inProgressTodos}
+          </span>
+          <span className="stat-item completed">
+            Completate: {completedTodos}
+          </span>
         </div>
       </div>
 
       {/* Barra azioni */}
       <div className="todo-actions-bar">
-        <button 
+        <button
           onClick={() => setShowAddForm(!showAddForm)}
           className="add-todo-btn"
           disabled={loading}
         >
           {showAddForm ? 'Annulla' : '+ Nuova Todo'}
         </button>
-        <button 
-          onClick={handleLogout}
-          className="logout-btn"
-        >
+        <button onClick={handleLogout} className="logout-btn">
           Logout
         </button>
       </div>
@@ -93,7 +98,9 @@ const Home = () => {
       {error && (
         <div className="error-message">
           <span>{error}</span>
-          <button onClick={clearError} className="close-error">×</button>
+          <button onClick={clearError} className="close-error">
+            ×
+          </button>
         </div>
       )}
 
@@ -158,8 +165,8 @@ const Home = () => {
               <button type="submit" className="submit-btn" disabled={loading}>
                 {loading ? 'Aggiungendo...' : 'Aggiungi Todo'}
               </button>
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={() => setShowAddForm(false)}
                 className="cancel-btn"
               >
@@ -186,7 +193,7 @@ const Home = () => {
               <div className="empty-state">
                 <h3>Nessuna todo trovata</h3>
                 <p>Inizia aggiungendo la tua prima todo!</p>
-                <button 
+                <button
                   onClick={() => setShowAddForm(true)}
                   className="add-first-todo-btn"
                 >
@@ -197,7 +204,7 @@ const Home = () => {
           } else {
             content = (
               <ul className="todo-list">
-                {todos.map(todo => (
+                {todos.map((todo) => (
                   <TodoItem
                     key={todo.id}
                     todo={todo}

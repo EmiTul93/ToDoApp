@@ -21,10 +21,10 @@ const AuthForm = () => {
     register: registerLogin,
     handleSubmit: handleSubmitLogin,
     formState: { errors: loginErrors },
-    reset: resetLogin
+    reset: resetLogin,
   } = useForm({
     resolver: yupResolver(loginSchema),
-    mode: 'onBlur'
+    mode: 'onBlur',
   });
 
   // Form per registrazione
@@ -32,16 +32,19 @@ const AuthForm = () => {
     register: registerRegister,
     handleSubmit: handleSubmitRegister,
     formState: { errors: registerErrors },
-    reset: resetRegister
+    reset: resetRegister,
   } = useForm({
     resolver: yupResolver(registerSchema),
-    mode: 'onBlur'
+    mode: 'onBlur',
   });
 
   const handleLogin = async (data) => {
     setIsLoading(true);
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/login', data);
+      const res = await axios.post(
+        'http://localhost:5000/api/auth/login',
+        data
+      );
       localStorage.setItem('token', res.data.token);
 
       toast.success('Login effettuato con successo!');
@@ -67,7 +70,8 @@ const AuthForm = () => {
         setIsLogin(true);
       }, 2000);
     } catch (err) {
-      const errorMessage = err.response?.data?.message || 'Registrazione fallita.';
+      const errorMessage =
+        err.response?.data?.message || 'Registrazione fallita.';
       toast.error(errorMessage);
     } finally {
       setIsLoading(false);
@@ -98,7 +102,9 @@ const AuthForm = () => {
                     className={loginErrors.email ? 'error' : ''}
                   />
                   {loginErrors.email && (
-                    <span className="error-message">{loginErrors.email.message}</span>
+                    <span className="error-message">
+                      {loginErrors.email.message}
+                    </span>
                   )}
                 </div>
 
@@ -117,7 +123,9 @@ const AuthForm = () => {
                     {showLoginPassword ? <FaEyeSlash /> : <FaEye />}
                   </button>
                   {loginErrors.password && (
-                    <span className="error-message">{loginErrors.password.message}</span>
+                    <span className="error-message">
+                      {loginErrors.password.message}
+                    </span>
                   )}
                 </div>
 
@@ -143,7 +151,9 @@ const AuthForm = () => {
                     className={registerErrors.email ? 'error' : ''}
                   />
                   {registerErrors.email && (
-                    <span className="error-message">{registerErrors.email.message}</span>
+                    <span className="error-message">
+                      {registerErrors.email.message}
+                    </span>
                   )}
                 </div>
 
@@ -157,12 +167,16 @@ const AuthForm = () => {
                   <button
                     type="button"
                     className="password-toggle"
-                    onClick={() => setShowRegisterPassword(!showRegisterPassword)}
+                    onClick={() =>
+                      setShowRegisterPassword(!showRegisterPassword)
+                    }
                   >
                     {showRegisterPassword ? <FaEyeSlash /> : <FaEye />}
                   </button>
                   {registerErrors.password && (
-                    <span className="error-message password-error">{registerErrors.password.message}</span>
+                    <span className="error-message password-error">
+                      {registerErrors.password.message}
+                    </span>
                   )}
                 </div>
 
